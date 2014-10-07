@@ -14,5 +14,5 @@ group :development do
   gem 'simplecov-rcov'
 end
 
-gem 'rest-client'
+gem 'rest-client', "~> 1.7"
 gem 'json'

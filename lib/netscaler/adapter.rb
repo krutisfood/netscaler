@@ -21,7 +21,7 @@ module Netscaler
 
     def prepare_options(args)
       options = {
-          :cookies=>{}
+          :cookies=>{},
       }
       unless @session.nil?
         options[:cookies]['NITRO_AUTH_TOKEN'] = @session
