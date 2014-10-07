@@ -22,6 +22,13 @@ module Netscaler
         return @netscaler.adapter.post_no_body('config/policystringmap/', 'policystringmap' => payload)
       end
 
+      def remove(payload) # :arg: :name => 'foo'
+        raise ArgumentError, 'payload cannot be null' if payload.nil?
+        payload = Netscaler.hash_hack(payload)
+        validate_payload(payload, [:name])
+        return @netscaler.adapter.delete("config/policystringmap/#{payload[:name]}")
+      end
+
       def get(payload)  # :args: :name => 'foo'
         raise ArgumentError, 'arg must contain name of policystringmap! :name => "foo"' if payload.nil?
         validate_payload(payload, [:name])
@@ -32,6 +39,13 @@ module Netscaler
         raise ArgumentError, 'payload cannot be null' if payload.nil?
         validate_payload(payload, [:name, :key, :value])
         return @netscaler.adapter.post_no_body('config/policystringmap_pattern_binding/', 'policystringmap_pattern_binding' => payload)
+      end
+
+      def unbind(payload) # :args:  :name => 'foo', :key => 'a'
+        raise ArgumentError, 'payload cannot be null' if payload.nil?
+        payload = Netscaler.hash_hack(payload)
+        validate_payload(payload, [:name, :key])
+        return @netscaler.adapter.post_no_body("config/policystringmap_pattern_binding/#{payload[:name]}?action=unbind", {'params' => {'action' => 'unbind'}, 'policystringmap_pattern_binding' => payload})
       end
     end
   end
