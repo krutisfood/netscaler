@@ -38,9 +38,15 @@ module Netscaler
 
     ##
     # argument is optional, if left empty it will return all servicegroups
-    def show(payload) # :arg: servicegroupname
-      return @netscaler.adapter.get("config/servicegroup/", args) if payload.nil?
-      return @netscaler.adapter.get("config/servicegroup/#{payload}")
+    def show(payload = {}) # :arg: servicegroupname
+      if payload[:name] != nil then
+        validate_payload(payload, [:name])
+        return @netscaler.adapter.get("config/servicegroup/#{payload[:name]}")
+      elsif payload == {} then
+        return @netscaler.adapter.get('config/servicegroup/')
+      else
+        raise ArgumentError, 'payload supplied must have been missing :name'
+      end
     end
 
     ##

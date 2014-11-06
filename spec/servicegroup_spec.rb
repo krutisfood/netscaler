@@ -5,6 +5,31 @@ require 'netscaler/mock_adapter'
 describe Netscaler::ServiceGroup do
 
   connection = Netscaler::Connection.new 'hostname' => 'foo', 'password' => 'bar', 'username' => 'bar'
+  connection.adapter = Netscaler::MockAdapter.new :body => '{ "errorcode": 0, "message": "Done" }'
+
+  context 'when showing servicegroups' do
+    it "with no param used return all service groups" do
+      result = connection.servicegroups.show
+      result.should be_kind_of(Hash)
+    end
+
+    it 'supplying the name parameter will return Hash' do
+      result = connection.servicegroups.show :name => 'foo'
+      result.should be_kind_of(Hash)
+    end
+
+    it 'when showing a particular service group string is invalid' do
+      expect {
+        connection.servicegroups.show('asdf')
+      }.should raise_error(TypeError, /convert/)
+    end
+
+    it 'when showing a particular service group :name is required' do
+      expect {
+        connection.servicegroups.show(:foo => 'bar')
+      }.should raise_error(ArgumentError, /name/)
+    end
+  end
 
   context 'when adding a new servicegroup' do
 
